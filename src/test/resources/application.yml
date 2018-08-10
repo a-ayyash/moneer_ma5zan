@@ -1,0 +1,20 @@
+server:
+  port: 8081
+
+logging:
+  level:
+    org.springframework.web: debug
+
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:postgresql://localhost:5432/moneer_qa
+    username: ahmad
+    password:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: 'create-drop'
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
