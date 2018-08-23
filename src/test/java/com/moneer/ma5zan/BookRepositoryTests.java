@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -24,7 +25,8 @@ import java.util.List;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("test")
-public class Ma5zanApplicationTests {
+//@Rollback(false)
+public class BookRepositoryTests {
 
   @Autowired
   private TestEntityManager testEntityManager;
@@ -162,5 +164,37 @@ public class Ma5zanApplicationTests {
     testEntityManager.persist(book);
     List<Book> b = bookRepository.findByPagesCount(book.getPagesCount());
     assertThat(b).extracting(Book::getPagesCount).containsOnly(book.getPagesCount());
+  }
+
+  @Test
+  public void givenBook_shouldNotBeFound_whenDeleted() {
+    Book book = new Book("mock123", "mock");
+    testEntityManager.persist(book);
+    List<Book> b = bookRepository.findAll();
+    assertThat(b).extracting(Book::getTitle).containsOnly(book.getTitle());
+    b.clear();
+
+    bookRepository.delete(book);
+    b = bookRepository.findAll();
+    assertThat(b.isEmpty()).isTrue();
+  }
+
+  @Test
+  public void givenNewTitle_shouldBeUpdated() {
+    Book book = new Book("mock123", "mock");
+    testEntityManager.persist(book);
+    List<Book> b = bookRepository.findAll();
+    Long id = book.getId();
+    assertThat(b).extracting(Book::getId).containsOnly(id);
+    b.clear();
+
+    String newTitle = "this is a new title";
+
+    book.setTitle(newTitle);
+    bookRepository.saveAndFlush(book);
+
+    b = bookRepository.findAll();
+    assertThat(b).extracting(Book::getId).containsOnly(id);
+    assertThat(b).extracting(Book::getTitle).containsOnly(newTitle);
   }
 }

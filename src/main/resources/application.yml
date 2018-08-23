@@ -1,7 +1,7 @@
 spring:
   profiles: default
   datasource:
-    url: jdbc:postgresql://localhost:5432/moneer
+    jdbcUrl: jdbc:postgresql://localhost:5432/moneer
     username: ahmad
     password:
     driver-class-name: org.postgresql.Driver
@@ -11,4 +11,3 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-

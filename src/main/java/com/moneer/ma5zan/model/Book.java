@@ -123,6 +123,11 @@ public class Book {
     this.title = title;
   }
 
+  public Book() {
+    this.title = "this is a test title";
+    this.author = "this is a test author";
+  }
+
   public Book(String title, String author) {
     this.title = title;
     this.author = author;
